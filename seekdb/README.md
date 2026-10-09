@@ -20,11 +20,11 @@ Before deploying `seekdb`, ensure that the following requirements are met:
 To start a seekdb instance, use the following commands:
 
 ```bash
-docker run -d -p 2881:2881 -p 2886:2886 oceanbase/seekdb
+docker run -d -p 2881:2881 oceanbase/seekdb
 
 # Execute init SQL scripts after bootstrap, you need to mount the directory containing the init scripts then specify the directory in container via environment variable INIT_SCRIPTS_PATH.
 # Please do not change root user's password in SQL scripts. If you'd like to change root user's password, use environment variable ROOT_PASSWORD.
-docker run -d -p 2881:2881 -p 2886:2886 -e ROOT_PASSWORD={set_as_your_pwd} -v {init_sql_folder_path}:/root/boot/init.d -e INIT_SCRIPTS_PATH=/root/boot/init.d oceanbase/seekdb
+docker run -d -p 2881:2881 -e ROOT_PASSWORD={set_as_your_pwd} -v {init_sql_folder_path}:/root/boot/init.d -e INIT_SCRIPTS_PATH=/root/boot/init.d oceanbase/seekdb
 ```
 
 ## Supported Environment Variables
@@ -58,7 +58,7 @@ log_disk_size=2G
 The start command should be like this.
 ```
 # **Note:** If you decide to use a configuration file, please don't specify the resource related environment variables.
-docker run -d -p 2881:2881 -p 2886:2886 -v {config_file}:/etc/seekdb/seekdb.cnf oceanbase/seekdb
+docker run -d -p 2881:2881 -v {config_file}:/etc/seekdb/seekdb.cnf oceanbase/seekdb
 ```
 
 ## Data Persistence
@@ -69,11 +69,11 @@ Seekdb deploys in directory `/var/lib/seekdb`. If you'd like to persist the data
 ```
 # On Linux or MacOS
 mkdir -p seekdb
-docker run -d -p 2881:2881 -p 2886:2886 -v $PWD/seekdb:/var/lib/seekdb --name seekdb oceanbase/seekdb
+docker run -d -p 2881:2881 -v $PWD/seekdb:/var/lib/seekdb --name seekdb oceanbase/seekdb
 
 # On Windows
 docker volume create seekdb
-docker run -d -p 2881:2881 -p 2886:2886 -v seekdb:/var/lib/seekdb --name seekdb oceanbase/seekdb
+docker run -d -p 2881:2881 -v seekdb:/var/lib/seekdb --name seekdb oceanbase/seekdb
 ```
 
 ## Connecting to seekdb Instance
@@ -81,7 +81,4 @@ docker run -d -p 2881:2881 -p 2886:2886 -v seekdb:/var/lib/seekdb --name seekdb 
 ```
 mysql -h 127.0.0.1 -P 2881 -u root -p    # Connect with the root account
 ```
-
-## Access dashboard
-The container provides a user-friendly web interface, you can access it in the browser `http://${server_ip}:2886`, the login password is the same as user root's password. If ROOT_PASSWORD is not set, leave the password field blank.
 
