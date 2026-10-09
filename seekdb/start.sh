@@ -184,7 +184,9 @@ if [ ! -f "$INITIALIZED_FLAG" ]; then
     if [ -n "$ROOT_PASSWORD" ]; then
         ESCAPED_PASSWORD=$(sql_escape "$ROOT_PASSWORD")
         echo "Setting root password via ALTER USER..."
-        mysql_root "" -e "ALTER USER 'root' IDENTIFIED BY '${ESCAPED_PASSWORD}';"
+        # NO_BACKSLASH_ESCAPES so literal \n/\t in ROOT_PASSWORD are not
+        # interpreted as escape sequences; must be same mysql session as ALTER.
+        mysql_root "" -e "SET SESSION sql_mode = 'NO_BACKSLASH_ESCAPES'; ALTER USER 'root' IDENTIFIED BY '${ESCAPED_PASSWORD}';"
 
         if ! mysql_root "$ROOT_PASSWORD" -e "SELECT 1" >/dev/null 2>&1; then
             echo "Failed to verify root password after ALTER USER. Initialization aborted."
