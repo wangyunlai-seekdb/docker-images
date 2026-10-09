@@ -62,17 +62,18 @@ docker run -d -p 2881:2881 -p 2886:2886 -v {config_file}:/etc/seekdb/seekdb.cnf 
 ```
 
 ## 数据持久化
-Seekdb 部署在 `/var/lib/oceanbase` 目录中，如果您想将数据持久化到主机服务器，请将主机服务器上的空目录挂载到此路径。
-***注意***: 如果您在 Windows 系统上运行 seekdb 容器，请使用 docker volume 以确保容器能正常工作。
+Seekdb 部署在 `/var/lib/seekdb` 目录中。如果您想将数据持久化到主机服务器，请将主机服务器上的空目录挂载到此路径。
+
+***注意***: 基于 SeekDB 1.4+ 的镜像使用 `/var/lib/seekdb`。旧版 1.3.x 镜像使用 `/var/lib/oceanbase`；升级时请同步更新卷挂载路径。如果您在 Windows 系统上运行 seekdb 容器，请使用 docker volume 以确保容器能正常工作。
 
 ```
 # On Linux or MacOS
 mkdir -p seekdb
-docker run -d -p 2881:2881 -p 2886:2886 -v $PWD/seekdb:/var/lib/oceanbase --name seekdb oceanbase/seekdb
+docker run -d -p 2881:2881 -p 2886:2886 -v $PWD/seekdb:/var/lib/seekdb --name seekdb oceanbase/seekdb
 
 # On Windows
 docker volume create seekdb
-docker run -d -p 2881:2881 -p 2886:2886 -v seekdb:/var/lib/oceanbase --name seekdb oceanbase/seekdb
+docker run -d -p 2881:2881 -p 2886:2886 -v seekdb:/var/lib/seekdb --name seekdb oceanbase/seekdb
 ```
 
 ## 连接到 seekdb 实例
